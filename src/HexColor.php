@@ -29,7 +29,11 @@ final class HexColor implements ValueObject, Equality
     {
         $re = '/#[0-9a-f]{6}/m';
         $matches = [];
-        if (1 !== preg_match($re, strtolower($color), $matches)) {
+        if (strlen($color) === 6) {
+            $color = '#' . $color;
+        }
+
+        if (strlen($color) !== 7 || 1 !== preg_match($re, strtolower($color), $matches)) {
             throw new InvalidArgumentException('Invalid hex color provided');
         }
         $this->color = $matches[0];
