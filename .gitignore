@@ -2,3 +2,4 @@
 /composer.lock
 /.idea
 /.phpcs-cache
+/phpspec-coverage.xml

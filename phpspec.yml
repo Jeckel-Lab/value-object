@@ -1,3 +1,13 @@
+extensions:
+  FriendsOfPhpSpec\PhpSpec\CodeCoverage\CodeCoverageExtension:
+    format:
+      - text
+      - clover
+    whitelist:
+      - src
+    output:
+      clover: phpspec-coverage.xml
+
 suites:
   jlab_suite:
     namespace: JeckelLab\ValueObject
