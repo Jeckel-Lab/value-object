@@ -9,30 +9,42 @@ declare(strict_types=1);
 
 namespace spec\JeckelLab\ValueObject;
 
-use Faker\Factory;
 use JeckelLab\Contract\Domain\ValueObject\Exception\InvalidArgumentException;
 use JeckelLab\ValueObject\HexColor;
 use PhpSpec\ObjectBehavior;
 
 class HexColorSpec extends ObjectBehavior
 {
-    private $faker;
-
-    public function __construct()
-    {
-        $this->faker = Factory::create();
-    }
-
     function it_is_initializeable()
     {
-        $this->beConstructedWith($this->faker->hexColor);
+        $this->beConstructedWith('#ff123a');
         $this->shouldHaveType(HexColor::class);
         $this->shouldNotThrow(InvalidArgumentException::class)->duringInstantiation();
     }
 
-    function it_is_not_initializeable_with_invalid_color()
+    function it_is_initializeable_short_color()
     {
-        $this->beConstructedWith($this->faker->email);
+        $this->beConstructedWith('ff123a');
+        $this->shouldHaveType(HexColor::class);
+        $this->shouldNotThrow(InvalidArgumentException::class)->duringInstantiation();
+        $this->getColor()->shouldReturn('#ff123a');
+    }
+
+    function it_is_not_initializeable_with_invalid_color_length()
+    {
+        $this->beConstructedWith('#ff123a#');
+        $this->shouldThrow(InvalidArgumentException::class)->duringInstantiation();
+    }
+
+    function it_is_not_initializeable_with_invalid_color_string_1()
+    {
+        $this->beConstructedWith('#ff1#23');
+        $this->shouldThrow(InvalidArgumentException::class)->duringInstantiation();
+    }
+
+    function it_is_not_initializeable_with_invalid_color_string_2()
+    {
+        $this->beConstructedWith('#ff123g');
         $this->shouldThrow(InvalidArgumentException::class)->duringInstantiation();
     }
 
@@ -44,14 +56,14 @@ class HexColorSpec extends ObjectBehavior
 
     function it_return_color_as_string()
     {
-        $color = $this->faker->hexColor;
+        $color = '#ff123a';
         $this->beConstructedWith($color);
         $this->__toString()->shouldReturn($color);
     }
 
     function it_validate_object_equality()
     {
-        $colorString = $this->faker->hexColor;
+        $colorString = '#ff123a';
         $colorObj = new HexColor($colorString);
         $this->beConstructedWith($colorString);
         $this->equals($colorObj)->shouldReturn(true);
@@ -59,27 +71,27 @@ class HexColorSpec extends ObjectBehavior
 
     function it_validate_color_equality()
     {
-        $colorString = $this->faker->hexColor;
+        $colorString = '#ff123a';
         $this->beConstructedWith($colorString);
         $this->equals($colorString)->shouldReturn(true);
     }
 
     function it_reject_object_inequality()
     {
-        $colorObj = new HexColor($this->faker->hexColor);
-        $this->beConstructedWith($this->faker->hexColor);
+        $colorObj = new HexColor('#ff123a');
+        $this->beConstructedWith('#ff123b');
         $this->equals($colorObj)->shouldReturn(false);
     }
 
     function it_reject_equality_on_different_object()
     {
-        $this->beConstructedWith($this->faker->hexColor);
+        $this->beConstructedWith('#ff123a');
         $this->equals(new \stdClass())->shouldReturn(false);
     }
 
     function it_reject_color_inequality()
     {
-        $this->beConstructedWith($this->faker->hexColor);
-        $this->equals($this->faker->hexColor)->shouldReturn(false);
+        $this->beConstructedWith('#ff123a');
+        $this->equals('#ff123b')->shouldReturn(false);
     }
 }
