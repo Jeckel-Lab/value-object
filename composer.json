@@ -3,8 +3,8 @@
     "description": "Collection of common and reusable value objects in PHP",
     "type": "library",
     "require": {
-        "php": "^7.2",
-        "jeckel-lab/contract": "^1.2"
+        "php": "^7.2 || ^8.0",
+        "jeckel-lab/contract": ">=1.2"
     },
     "require-dev": {
         "phpro/grumphp": "^1.3",
