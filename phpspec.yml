@@ -1,0 +1,4 @@
+suites:
+  jlab_suite:
+    namespace: JeckelLab\ValueObject
+    psr4_prefix: JeckelLab\ValueObject
