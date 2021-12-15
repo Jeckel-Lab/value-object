@@ -9,34 +9,57 @@ declare(strict_types=1);
 
 namespace JeckelLab\ValueObject;
 
-use JeckelLab\Contract\Domain\Equality;
 use JeckelLab\Contract\Domain\ValueObject\Exception\InvalidArgumentException;
-use JeckelLab\Contract\Domain\ValueObject\ValueObject;
 
 /**
  * Class HexColor
  * @package JeckelLab\ValueObject
+ * @extends AbstractScalarValueObject<string>
  * @psalm-immutable
  */
-final class HexColor implements ValueObject, Equality
+final class HexColor extends AbstractScalarValueObject
 {
     /**
-     * @var string
+     * @param float|bool|int|string $value
+     * @psalm-param string
+     * @return bool
      */
-    protected $color;
-
-    public function __construct(string $color)
+    public static function isValid(float|bool|int|string $value): bool
     {
+        if (! is_string($value)) {
+            return false;
+        }
+        $value = trim($value);
         $re = '/#[0-9a-f]{6}/m';
         $matches = [];
-        if (strlen($color) === 6) {
-            $color = '#' . $color;
+        if (strlen($value) === 6) {
+            $value = '#' . $value;
         }
 
-        if (strlen($color) !== 7 || 1 !== preg_match($re, strtolower($color), $matches)) {
-            throw new InvalidArgumentException('Invalid hex color provided');
+        return (strlen($value) === 7 && 1 === preg_match($re, strtolower($value), $matches));
+    }
+
+    /**
+     * @param float|bool|int|string $value
+     * @psalm-param string
+     * @return bool|int|float|string
+     * @psalm-return string
+     */
+    public static function filter(float|bool|int|string $value): bool|int|float|string
+    {
+        $value = trim((string) $value);
+        $re = '/#[0-9a-f]{6}/m';
+        $matches = [];
+        if (strlen($value) === 6) {
+            $value = '#' . $value;
         }
-        $this->color = $matches[0];
+
+        if (strlen($value) !== 7 || 1 !== preg_match($re, strtolower($value), $matches)) {
+            // @codeCoverageIgnoreStart
+            throw new InvalidArgumentException('Invalid hex color provided');
+            // @codeCoverageIgnoreEnd
+        }
+        return $matches[0];
     }
 
     /**
@@ -44,26 +67,6 @@ final class HexColor implements ValueObject, Equality
      */
     public function getColor(): string
     {
-        return $this->color;
-    }
-
-    /**
-     * @param mixed $object
-     * @return bool
-     */
-    public function equals($object): bool
-    {
-        if (is_object($object)) {
-            if (! $object instanceof self) {
-                return false;
-            }
-            return $this->color === $object->color;
-        }
-        return $this->color === strtolower((string) $object);
-    }
-
-    public function __toString(): string
-    {
-        return $this->color;
+        return $this->value;
     }
 }

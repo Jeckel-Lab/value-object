@@ -12,43 +12,38 @@ namespace JeckelLab\ValueObject\Network;
 use JeckelLab\Contract\Domain\Equality;
 use JeckelLab\Contract\Domain\ValueObject\Exception\InvalidArgumentException;
 use JeckelLab\Contract\Domain\ValueObject\ValueObject;
+use JeckelLab\ValueObject\AbstractScalarValueObject;
 
 /**
  * Class IPv4
  * @package JeckelLab\ValueObject\Network
+ * @extends AbstractScalarValueObject<string>
  * @psalm-immutable
  */
-class IPv4 implements ValueObject, Equality
+class IPv4 extends AbstractScalarValueObject
 {
-    /** @var string */
-    protected $ip;
-
     /**
-     * Email constructor.
-     * @param string $ip
+     * @param float|bool|int|string $value
+     * @psalm-param string
+     * @return bool
      */
-    public function __construct(string $ip)
+    public static function isValid(float|bool|int|string $value): bool
     {
-        $filteredIp = filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
-        if (false === $filteredIp) {
-            throw new InvalidArgumentException('Invalid ip provided');
+        if (! is_string($value)) {
+            return false;
         }
-        $this->ip = $filteredIp;
+        return filter_var(trim($value), FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false;
     }
 
     /**
-     * @param mixed $object
-     * @return bool
+     * @param float|bool|int|string $value
+     * @psalm-param string
+     * @return bool|int|float|string
+     * @psalm-return string
      */
-    public function equals($object): bool
+    public static function filter(float|bool|int|string $value): bool|int|float|string
     {
-        if (is_object($object)) {
-            if (! $object instanceof self) {
-                return false;
-            }
-            return $this->ip === $object->ip;
-        }
-        return $this->ip === (string) $object;
+        return filter_var(trim((string) $value), FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
     }
 
     /**
@@ -56,14 +51,6 @@ class IPv4 implements ValueObject, Equality
      */
     public function getIp(): string
     {
-        return $this->ip;
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return $this->ip;
+        return $this->value;
     }
 }
