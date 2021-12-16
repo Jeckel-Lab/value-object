@@ -74,7 +74,6 @@ class EmailTest extends TestCase
             ['foobarbaz'],
             [123],
             [123.23],
-            [true]
         ];
     }
 }

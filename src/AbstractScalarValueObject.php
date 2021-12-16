@@ -16,34 +16,37 @@ use JeckelLab\Contract\Domain\ValueObject\ValueObject;
  * Class AbstractValueObject
  * @package JeckelLab\ValueObject
  * @psalm-immutable
- * @template ValueType of scalar
+ * @template ValueType of int|float|string
  */
 abstract class AbstractScalarValueObject implements ValueObject
 {
     /**
      * @var ValueType
      */
-    protected bool|int|float|string $value;
+    protected int|float|string $value;
 
     /**
-     * @var array<class-string<AbstractScalarValueObject<scalar>>, array<string|int, AbstractScalarValueObject<scalar>>>
+     * @var array<
+     *     class-string<AbstractScalarValueObject<int|float|string>>,
+     *     array<int|float|string, AbstractScalarValueObject<int|float|string>>
+     * >
      */
     private static array $instances = [];
 
     /**
      * @param ValueType $value
      */
-    private function __construct(bool|int|float|string $value)
+    final private function __construct(int|float|string $value)
     {
         $this->value = $value;
     }
 
     /**
-     * @param scalar $value
+     * @param int|float|string $value
      * @return bool
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public static function isValid(bool|int|float|string $value): bool
+    public static function isValid(int|float|string $value): bool
     {
         // @codeCoverageIgnoreStart
         return true;
@@ -51,10 +54,10 @@ abstract class AbstractScalarValueObject implements ValueObject
     }
 
     /**
-     * @param scalar $value
-     * @return scalar
+     * @param int|float|string $value
+     * @return int|float|string
      */
-    public static function filter(bool|int|float|string $value): bool|int|float|string
+    public static function filter(int|float|string $value): int|float|string
     {
         // @codeCoverageIgnoreStart
         return $value;
@@ -64,10 +67,12 @@ abstract class AbstractScalarValueObject implements ValueObject
     /**
      * @param mixed $value
      * @return static
+     * @psalm-suppress MixedArrayTypeCoercion
+     * @psalm-suppress MixedPropertyTypeCoercion
      */
     public static function from(mixed $value): static
     {
-        if (! (is_int($value) || is_float($value) || is_string($value) || is_bool($value))) {
+        if (! (is_int($value) || is_float($value) || is_string($value))) {
             throw new InvalidArgumentException(sprintf('Invalid value provided for %s', static::class));
         }
         if (! static::isValid($value)) {

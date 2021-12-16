@@ -20,11 +20,10 @@ use JeckelLab\Contract\Domain\ValueObject\Exception\InvalidArgumentException;
 final class HexColor extends AbstractScalarValueObject
 {
     /**
-     * @param float|bool|int|string $value
-     * @psalm-param string
+     * @param int|float|string $value
      * @return bool
      */
-    public static function isValid(float|bool|int|string $value): bool
+    public static function isValid(int|float|string $value): bool
     {
         if (! is_string($value)) {
             return false;
@@ -40,12 +39,10 @@ final class HexColor extends AbstractScalarValueObject
     }
 
     /**
-     * @param float|bool|int|string $value
-     * @psalm-param string
-     * @return bool|int|float|string
-     * @psalm-return string
+     * @param int|float|string $value
+     * @return int|float|string
      */
-    public static function filter(float|bool|int|string $value): bool|int|float|string
+    public static function filter(int|float|string $value): int|float|string
     {
         $value = trim((string) $value);
         $re = '/#[0-9a-f]{6}/m';
