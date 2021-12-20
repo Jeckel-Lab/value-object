@@ -82,7 +82,10 @@ abstract class AbstractScalarValueObject implements
     public static function from(mixed $value): static
     {
         if (! (is_int($value) || is_float($value) || is_string($value))) {
-            throw new InvalidArgumentException(sprintf('Invalid value provided for %s', static::class));
+            throw new InvalidArgumentException(sprintf(
+                'Invalid value type provided for %s (expected int|float|string)',
+                static::class
+            ));
         }
         if (! static::isValid($value)) {
             throw new InvalidArgumentException(sprintf('Invalid value "%s" provided for %s', $value, static::class));

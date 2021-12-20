@@ -29,6 +29,17 @@ class EmailTest extends TestCase
         $this->assertEquals('"foo@bar.com"', json_encode($email, JSON_THROW_ON_ERROR));
     }
 
+    public function testInitializationFailedWithInvalidDataType(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(sprintf(
+            'Invalid value type provided for %s (expected int|float|string)',
+            Email::class
+        ));
+
+        Email::from(['foor']);
+    }
+
     /**
      * @param mixed $emailValue
      * @return void
