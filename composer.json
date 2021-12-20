@@ -5,6 +5,7 @@
     "require": {
         "php": ">=8.0",
         "ext-filter": "*",
+        "ext-json": "*",
         "jeckel-lab/contract": "dev-main"
     },
     "require-dev": {

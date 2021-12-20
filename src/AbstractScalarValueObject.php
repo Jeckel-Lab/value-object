@@ -9,8 +9,12 @@ declare(strict_types=1);
 
 namespace JeckelLab\ValueObject;
 
+use JeckelLab\Contract\Domain\Equality;
 use JeckelLab\Contract\Domain\ValueObject\Exception\InvalidArgumentException;
 use JeckelLab\Contract\Domain\ValueObject\ValueObject;
+use JeckelLab\Contract\Domain\ValueObject\ValueObjectFactory;
+use JsonSerializable;
+use Stringable;
 
 /**
  * Class AbstractValueObject
@@ -18,7 +22,12 @@ use JeckelLab\Contract\Domain\ValueObject\ValueObject;
  * @psalm-immutable
  * @template ValueType of int|float|string
  */
-abstract class AbstractScalarValueObject implements ValueObject
+abstract class AbstractScalarValueObject implements
+    ValueObject,
+    ValueObjectFactory,
+    Stringable,
+    JsonSerializable,
+    Equality
 {
     /**
      * @var ValueType

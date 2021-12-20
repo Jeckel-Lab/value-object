@@ -42,7 +42,9 @@ class IPv4 extends AbstractScalarValueObject
     {
         $filteredValue = filter_var(trim((string) $value), FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
         if (false === $filteredValue) {
+            // @codeCoverageIgnoreStart
             throw new InvalidArgumentException(sprintf('Invalid value provided for %s', self::class));
+            // @codeCoverageIgnoreEnd
         }
         return $filteredValue;
     }

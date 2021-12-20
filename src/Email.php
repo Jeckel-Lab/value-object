@@ -39,7 +39,9 @@ final class Email extends AbstractScalarValueObject
     {
         $filteredValue = filter_var(trim((string) $value), FILTER_VALIDATE_EMAIL);
         if (false === $filteredValue) {
+            // @codeCoverageIgnoreStart
             throw new InvalidArgumentException(sprintf('Invalid value provided for %s', self::class));
+            // @codeCoverageIgnoreEnd
         }
         return $filteredValue;
     }
