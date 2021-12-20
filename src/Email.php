@@ -9,46 +9,41 @@ declare(strict_types=1);
 
 namespace JeckelLab\ValueObject;
 
-use JeckelLab\Contract\Domain\Equality;
 use JeckelLab\Contract\Domain\ValueObject\Exception\InvalidArgumentException;
-use JeckelLab\Contract\Domain\ValueObject\ValueObject;
 
 /**
  * Class Email
  * @package JeckelLab\ValueObject
+ * @extends AbstractScalarValueObject<string>
  * @psalm-immutable
  */
-final class Email implements ValueObject, Equality
+final class Email extends AbstractScalarValueObject
 {
-    /** @var string */
-    protected $email;
-
     /**
-     * Email constructor.
-     * @param string $email
+     * @param int|float|string $value
+     * @return bool
      */
-    public function __construct(string $email)
+    public static function isValid(int|float|string $value): bool
     {
-        $filteredEmail = filter_var($email, FILTER_VALIDATE_EMAIL);
-        if (false === $filteredEmail) {
-            throw new InvalidArgumentException('Invalid email provided');
+        if (! is_string($value)) {
+            return false;
         }
-        $this->email = $filteredEmail;
+        return filter_var(trim($value), FILTER_VALIDATE_EMAIL) !== false;
     }
 
     /**
-     * @param mixed $object
-     * @return bool
+     * @param int|float|string $value
+     * @return int|float|string
      */
-    public function equals($object): bool
+    public static function filter(int|float|string $value): int|float|string
     {
-        if (is_object($object)) {
-            if (! $object instanceof self) {
-                return false;
-            }
-            return $this->email === $object->email;
+        $filteredValue = filter_var(trim((string) $value), FILTER_VALIDATE_EMAIL);
+        if (false === $filteredValue) {
+            // @codeCoverageIgnoreStart
+            throw new InvalidArgumentException(sprintf('Invalid value provided for %s', self::class));
+            // @codeCoverageIgnoreEnd
         }
-        return $this->email === (string) $object;
+        return $filteredValue;
     }
 
     /**
@@ -56,14 +51,6 @@ final class Email implements ValueObject, Equality
      */
     public function getEmail(): string
     {
-        return $this->email;
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return $this->email;
+        return $this->value;
     }
 }
