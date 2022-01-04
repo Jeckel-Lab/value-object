@@ -107,7 +107,7 @@ abstract class AbstractScalarValueObject implements
         return $this === $other;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return $this->value;
     }
